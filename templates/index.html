@@ -1,0 +1,72 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serial Communication</title>
+</head>
+<body>
+    <h1>Serial Communication</h1>
+
+    <form id="connection-form" onsubmit="createConnection(); return false;">
+        <label for="serial_port">Serial Port:</label>
+        <input type="text" id="serial_port" name="serial_port" value="COM1"><br><br>
+
+        <label for="baud_rate">Baud Rate:</label>
+        <input type="number" id="baud_rate" name="baud_rate" value="9600"><br><br>
+
+        <button type="submit">Connect</button>
+    </form>
+
+    <form id="send-form" onsubmit="sendData(); return false;">
+        <label for="data_to_send">Data to Send:</label>
+        <input type="text" id="data_to_send" name="data_to_send"><br><br>
+
+        <label for="interval">Send Interval (miliseconds):</label>
+        <input type="number" id="interval" name="interval" value="1"><br><br>
+
+        <button type="submit">Send Data</button>
+    </form>
+
+    <!-- <div id="received_data"></div> -->
+
+    <script>
+        function sendData() {
+            var dataToSend = document.getElementById("data_to_send").value;
+            var interval = document.getElementById("interval").value;
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/send_data", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.send("data_to_send=" + encodeURIComponent(dataToSend) + "&interval=" + encodeURIComponent(interval));
+        }
+
+        function createConnection() {
+            var port = document.getElementById("serial_port").value;
+            var baudRate = document.getElementById("baud_rate").value;
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/create_connection", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.send("serial_port=" + encodeURIComponent(port) + "&baud_rate=" + encodeURIComponent(baudRate));
+        }
+
+        // function updateReceivedData(data) {
+        //     document.getElementById("received_data").innerText = data;
+        // }
+
+        // // Periodically fetch received data
+        // setInterval(function() {
+        //     var xhr = new XMLHttpRequest();
+        //     xhr.onreadystatechange = function() {
+        //         if (xhr.readyState == 4 && xhr.status == 200) {
+        //             updateReceivedData(xhr.responseText);
+        //         }
+        //     };
+        //     xhr.open("GET", "/received_data", true);
+        //     xhr.send();
+        // }, 1000);  // Update every second
+    </script>
+</body>
+</html>
